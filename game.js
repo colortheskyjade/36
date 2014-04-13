@@ -375,8 +375,8 @@ function recolor(triangles){
 				}
 			}
 
-			if(Math.random * 10 > 7){
-				index = 0;
+			if(Math.random * 10 > 5){
+				index = Math.floor((index + Math.random() * 4) / 2);
 			}
 
 			if(index == 0)
