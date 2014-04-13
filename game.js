@@ -333,7 +333,6 @@ function calcScore(){
 			score += 500;
 		}
 		recolor(data.groupMatches);
-		calcScore();
 	}else{
 		moves--;
 	}
@@ -376,7 +375,9 @@ function recolor(triangles){
 				}
 			}
 
-			index = Math.floor((index + Math.random() * 4)/2);
+			if(Math.random * 10 > 7){
+				index = 0;
+			}
 
 			if(index == 0)
 				triangles[i][x].className = "triangle cardinal";
