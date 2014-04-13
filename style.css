@@ -1,0 +1,22 @@
+.triangle{
+	height: 25px;
+	width: 25px;
+	border: 1px #000 solid;
+	float: left;
+}
+
+.gamerow{
+	clear: both;
+}
+
+.cardinal{
+	background-color:#c0392b;
+}
+
+.gold{
+	background-color:#f1c40f;
+}
+
+.white{
+	background-color:#ecf0f1;
+}
