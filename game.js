@@ -20,16 +20,18 @@ var gameOn = true;
 
 function initGrid(){
 	var initColor = Math.floor(Math.random() * 3);
+	var writeMe;
 	for(var i = 0; i < 2; i++){
 		for(var ii = 0; ii < 18; ii++){
+			if(i == 0) { writeMe = " active"; } else { writeMe = "";}
 			if((ii % 3) == 0){
-				gridrow[i].getElementsByTagName("div")[ii].setAttribute("class", "triangle " + colors[initColor]);
+				gridrow[i].getElementsByTagName("div")[ii].setAttribute("class", "triangle " + colors[initColor] + writeMe);
 			}
 			else if(i == 0){
-				gridrow[i].getElementsByTagName("div")[ii].setAttribute("class", "triangle " + colors[(initColor + 1) % 3]);
+				gridrow[i].getElementsByTagName("div")[ii].setAttribute("class", "triangle " + colors[(initColor + 1) % 3] + writeMe);
 			}
 			else{
-				gridrow[i].getElementsByTagName("div")[ii].setAttribute("class", "triangle " + colors[(initColor + 2) % 3]);
+				gridrow[i].getElementsByTagName("div")[ii].setAttribute("class", "triangle " + colors[(initColor + 2) % 3] + writeMe);
 			}
 		}
 	}
@@ -89,19 +91,33 @@ function init() {
 	initGrid();
 }
 
+function updateActive(){
+	var limit;
+	$(".active").switchClass("active", "");
+
+	if(curRow == 2){ limit = 6;} else{ limit = 18; }
+	for(var i = 0; i < limit; i++){
+		console.log(curRow);
+		gridrow[curRow].getElementsByTagName("div")[i].className += " active" ;
+	}
+}
+
 // Rotating
 function moveU(){
 	if(curRow > 0){
 		curRow--;
+		updateActive();
 	}
 	else{
 		curRow = 0;
 	}
+
 }
 
 function moveD(){
 	if(curRow < 2){
 		curRow++;
+		updateActive();
 	}
 	else{
 		curRow = 2;
@@ -175,7 +191,17 @@ function swap(){
 	gridrow[1].getElementsByTagName("div")[17].className = temp[5];
 }
 
+function resetActive(){
+	$("div").removeClass("active");
+	for(var i = 0; i < 42; i++){
+		if(Math.floor(i/18) == curRow){
+			gridrow[Math.floor(i / 18)].getElementsByTagName("div")[i % 18].className += " active";
+		}
+	}
+}
+
 function keyPress(code) {
+	$("div").removeClass("popout");
 	if(code === 27){
 		init(); // esc
 	}
@@ -200,6 +226,7 @@ function keyPress(code) {
 		swap(); // space
 		calcScore();
 	}
+	resetActive();
 }
 
 document.onkeydown = function(e) { keyPress(e.keyCode); }
@@ -260,7 +287,8 @@ function matches(row, col){
 	for(var i = 0; i < adj.length; i++){
 		if(adj[i] == null)
 			continue;
-		else if(adj[i].className === current.className){
+		else if(adj[i].className === current.className || adj[i].className + " active" == current.className ||
+			adj[i].className == current.className + " active"){
 			matches.push(adj[i]);
 		}
 	}
@@ -305,6 +333,7 @@ function calcScore(){
 			score += 500;
 		}
 		recolor(data.groupMatches);
+		calcScore();
 	}else{
 		moves--;
 	}
@@ -327,13 +356,13 @@ function recolor(triangles){
 			colors = [0,0,0,0];
 			for(var j = 0; j < m.length; j++){
 				if(m[j] == null){continue;}
-				else if(m[j].className == "triangle cardinal"){
+				else if(m[j].className == "triangle cardinal" || m[j].className == "triangle cardinal active" ){
 					colors[0]++;
 				}
-				else if(m[j].className == "triangle gold"){
+				else if(m[j].className == "triangle gold" || m[j].className == "triangle gold active"){
 					colors[1]++;
 				}
-				else if(m[j].className == "triangle white"){
+				else if(m[j].className == "triangle white" || m[j].className == "triangle white active"){
 					colors[2]++;
 				}
 				else{
@@ -346,6 +375,9 @@ function recolor(triangles){
 					break;
 				}
 			}
+
+			index = Math.floor((index + Math.random() * 4)/2);
+
 			if(index == 0)
 				triangles[i][x].className = "triangle cardinal";
 			else if(index == 1)
@@ -354,6 +386,10 @@ function recolor(triangles){
 				triangles[i][x].className = "triangle white";
 			else
 				triangles[i][x].className = "triangle black";
+			if(temp.row == curRow){
+				triangles[i][x].className += " active";
+			}
+			triangles[i][x].className += " popout";
 		}
 	}
 }
@@ -362,6 +398,7 @@ function recolor(triangles){
 function endGame(){
 	$(".triangle").switchClass("triangle", "done");
 	gameOn = false;
+	$(".active").switchClass("active", "");
 }
 
 init();
