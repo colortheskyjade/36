@@ -293,6 +293,7 @@ function matches(row, col){
 			matches.push(adj[i]);
 		}
 	}
+	matches.push(current);
 	return matches;
 }
 
@@ -311,7 +312,7 @@ function findGridMatches(){
 
 	for(var i = 0; i < 42; i++){
 		temp = matches(Math.floor(i / 18), i % 18);
-		if(temp.length > 1){
+		if(temp.length > 2){
 			groupMatches.push(temp);
 			centers.push(gridrow[Math.floor(i / 18)].getElementsByTagName("div")[i % 18]);
 		}
@@ -394,6 +395,8 @@ function recolor(triangles){
 			triangles[i][x].className += " popout";
 		}
 	}
+
+	calcScore();
 }
 
 // End Game
