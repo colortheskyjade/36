@@ -87,6 +87,7 @@ function init() {
 
 	initScore();
 	initHS();
+	updateHS();
 	updateMoves();
 	initGrid();
 }
@@ -375,7 +376,7 @@ function recolor(triangles){
 				}
 			}
 
-			if(Math.random * 10 > 5){
+			if(Math.random() * 10 > 5){
 				index = Math.floor((index + Math.random() * 4) / 2);
 			}
 
